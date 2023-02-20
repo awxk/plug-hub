@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   userId: string;
@@ -16,4 +16,4 @@ export class User {
 
   @Column({ default: 0 })
   profileViews: number;
-}   
+}

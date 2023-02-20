@@ -9,4 +9,16 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME ?? 'You Forgot to set DATABASE_NAME in .env',
 });
 
-await AppDataSource.initialize();
+try {
+  await AppDataSource.initialize();
+
+  console.debug('[DEBUG] Connected to the database.');
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error(`[ERROR] ${error.message}\n\t${error.stack}`);
+    throw error;
+  } else {
+    console.error(`[ERROR] ${error}`);
+    throw error;
+  }
+}
