@@ -103,5 +103,18 @@ dist
 # TernJS port file
 .tern-port
 
-.DS_Store
 *.sqlite
+
+# Local .env files
+.env.local
+.env.*.local
+
+# production
+.env.production
+.env.prod
+
+# misc
+.DS_Store
+.env.development.local
+.env.test.local
+.env.production.local
