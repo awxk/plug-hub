@@ -14,7 +14,7 @@ app.listen(PORT, () => {
   console.log(`[ALERT] Server started at http://localhost:${PORT}`);
 });
 
-/* process.on('uncaughtException', (error: Error) => {
+process.on('uncaughtException', (error: Error) => {
   console.error(`[ERROR] Uncaught exception: ${error.message}\n\t${error.stack}`);
   process.exit(1);
 });
@@ -22,4 +22,4 @@ app.listen(PORT, () => {
 process.on('unhandledRejection', (reason: unknown, promise: Promise<unknown>) => {
   console.error(`[ERROR] Unhandled promise rejection: ${reason}\n\t${promise}`);
   process.exit(1);
-}); */
+});
