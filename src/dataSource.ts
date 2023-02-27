@@ -22,14 +22,19 @@ export const AppDataSource = new DataSource({
 });
 
 try {
+  console.debug('[DEBUG] Initializing the database.');
   await AppDataSource.initialize();
   console.debug('[DEBUG] Connected to the database.');
 } catch (error: unknown) {
   if (error instanceof Error) {
     console.error(`[ERROR] ${error.message}\n\t${error.stack}`);
+
+    // We throw the error so that the application will exit with an error code of 1.
     throw error;
   } else {
     console.error(`[ERROR] ${error}`);
+
+    // We throw the error so that the application will exit with an error code of 1.
     throw error;
   }
 }

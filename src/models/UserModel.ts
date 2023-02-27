@@ -23,4 +23,20 @@ async function addUser(email: string, passwordHash: string): Promise<User> {
   }
 }
 
-export { addUser };
+async function getUserByEmail(email: string): Promise<User | null> {
+  if (!email) {
+    throw new Error('[ERROR] Email is required');
+  }
+
+  const user = await userRepository
+    .createQueryBuilder('user')
+    .where('user.email = :email', { email })
+    .getOne();
+  if (!user) {
+    throw new Error(`[ERROR] User with email ${email} not found`);
+  }
+
+  return user;
+}
+
+export { addUser, getUserByEmail };

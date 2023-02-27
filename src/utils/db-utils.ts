@@ -8,27 +8,40 @@ function parseDatabaseError(err: Error): DatabaseConstraintError {
 
     const driverErrorString: string = err.driverError.toString();
 
-    if (driverErrorString.includes('UNIQUE')) {
-      const columnName = driverErrorString?.split(':')?.at(-1)?.split('.').at(-1) ?? '';
-      return {
-        type: 'unique',
-        columnName,
-        message: `The '${columnName}' property must be unique.`,
-      };
-    }
-    if (driverErrorString.includes('NOT NULL')) {
-      const columnName = driverErrorString?.split(':')?.at(-1)?.split('.').at(-1) ?? '';
-      return {
-        type: 'not null',
-        columnName,
-        message: `The '${columnName}' property must not be null.`,
-      };
-    }
-    if (driverErrorString.includes('CHECK')) {
-      return { type: 'check', message: `Failed a check constraint.` };
+    console.log(`[INFO] Driver error string: ${driverErrorString}`);
+
+    const driverErrorStringTokens: string[] = driverErrorString.split(':');
+
+    if (driverErrorStringTokens.length < 3) {
+      return { type: 'unknown', message: 'An unknown database error has occurred.' };
     }
 
-    return { type: 'unknown', message: 'An unknown database error has occurred.' };
+    const constraintType: string = driverErrorStringTokens[1].trim().toLowerCase();
+
+    switch (constraintType) {
+      case 'unique': {
+        const columnName: string = driverErrorStringTokens[2].trim().split('.').at(-1) ?? '';
+        return {
+          type: 'unique',
+          columnName,
+          message: `The '${columnName}' property must be unique.`,
+        };
+      }
+      case 'not null': {
+        const columnName: string = driverErrorStringTokens[2].trim().split('.').at(-1) ?? '';
+        return {
+          type: 'not null',
+          columnName,
+          message: `The '${columnName}' property must not be null.`,
+        };
+      }
+      case 'check': {
+        return { type: 'check', message: `Failed a check constraint.` };
+      }
+      default: {
+        return { type: 'unknown', message: 'An unknown database error has occurred.' };
+      }
+    }
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(`[ERROR] ${error.message}\n\t${error.stack}`);
